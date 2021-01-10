@@ -7,3 +7,8 @@ To run in the docker container (This has been tested in the MacOS)
 ```bash
 docker-compose up --build
 ```
+In my vscode workspace:
+
+![image-20210111105650133](https://cdn.jsdelivr.net/gh/ojitha/blog@master/uPic/image-20210111105650133.png)
+
+As shown in the above screenshot, the data file created is first_file.txt which is in fixed width. The console shows the docker compose logs.
