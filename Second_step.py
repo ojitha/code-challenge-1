@@ -2,31 +2,45 @@
     This script creates the CSV file from the fix width file using
     PySpark. This has to be executed in the Hortonwork sandbox version 2.6.
 '''
+
 from pyspark.sql import SparkSession
 from pyspark.sql.types import *
 from pyspark.sql.functions import udf
-from utils import removeStartEndChars
+from utils import removeStartEndChars, FileConfig, WIDTH, NAME
+import ConfigParser
+import logging
 
+logging.basicConfig(filename='today.log',level=logging.INFO)
+logging.info("==========================================")
+
+f_config = FileConfig()
+
+config = ConfigParser.ConfigParser()
+config.read('config.ini')
 
 # created a UDF to cleanse for example
 cleanCol = udf(lambda x: removeStartEndChars(x), StringType())
 
 spark = SparkSession.builder.appName('abc').getOrCreate()
 
-df = spark.read.text("data/first_file.txt")
+df = spark.read.text("data/"+config.get('FIXED_WIDTH_FILE','file_name'))
 
 #create a dataframe from the fixed width file
 csv_df = df.select(
-    df.value.substr(1,20).alias('first_name'),
-    df.value.substr(21,20).alias('last_name'),
-    df.value.substr(41,80).alias('address'),
-    df.value.substr(121,12).alias('dob')
+    df.value.substr(1
+        ,f_config.first_name[WIDTH]).alias(f_config.first_name[NAME]),
+    df.value.substr(f_config.first_name[WIDTH]+1
+        ,f_config.last_name[WIDTH]).alias(f_config.last_name[NAME]),
+    df.value.substr(f_config.first_name[WIDTH]+f_config.last_name[WIDTH]+1
+        ,f_config.address[WIDTH]).alias(f_config.address[NAME]),
+    df.value.substr(f_config.first_name[WIDTH]+f_config.last_name[WIDTH]+f_config.address[WIDTH]+1
+        ,f_config.dob[WIDTH]).alias(f_config.dob[NAME])
 )
-csv_df.show()
+# csv_df.show()
 df_to_save = csv_df \
-    .withColumn('first_name', cleanCol('first_name')) \
-    .withColumn('last_name', cleanCol('last_name')) \
-    .withColumn('address', cleanCol('address')) \
-    .withColumn('dob', cleanCol('dob'))
+    .withColumn(f_config.first_name[NAME], cleanCol(f_config.first_name[NAME])) \
+    .withColumn(f_config.last_name[NAME], cleanCol(f_config.last_name[NAME])) \
+    .withColumn(f_config.address[NAME], cleanCol(f_config.address[NAME])) \
+    .withColumn(f_config.dob[NAME], cleanCol(f_config.dob[NAME]))
 
-df_to_save.write.option('delimiter','|').format('csv').save('data/mytest.csv')
+df_to_save.write.option('delimiter','|').option('header',True).format('csv').save('data/'+config.get('DEFAULT','csv_file.name'))
