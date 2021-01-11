@@ -1,11 +1,15 @@
+```
+    Third step to create anonymize csv
+```
+
 from pyspark.sql import SparkSession
 from faker import Factory
 from pyspark.sql.functions import udf
 from pyspark.sql.types import *
 import ConfigParser
-#import logging
+import logging
 
-# # logging.basicConfig(filename='today.log',level=logging.INFO)
+logging.basicConfig(filename='today.log',level=logging.INFO)
 config = ConfigParser.ConfigParser()
 config.read('config.ini')
 
@@ -29,10 +33,13 @@ fake_address_udf = udf(fake_address, StringType())
 
 spark = SparkSession.builder.appName('Third_step').getOrCreate()
 df = spark.read.option('header',True).option('delimiter','|').option("inferSchema",True).csv("data/"+config.get('DEFAULT','csv_file.name'))
-#logging.info(df.printSchema())
+logging.info(df.printSchema())
 
-df.show(truncate=False)
+#df.show(truncate=False)
 
+anonymize_df = df.withColumn(config.get('FIXED_WIDTH_FILE','first_name.name'), fake_first_name_udf()) \
+    .withColumn(config.get('FIXED_WIDTH_FILE','last_name.name'), fake_last_name_udf()) \
+    .withColumn('address', fake_address_udf())
 
-df1 = df.withColumn('first_name', fake_first_name_udf()).withColumn('last_name', fake_last_name_udf()).withColumn('address', fake_address_udf())
-df1.show(truncate=False)
+#anonymize_df.show(truncate=False)
+anonymize_df.write.option('header',True).format('csv').save('data/'+config.get('DEFAULT','anonymize_file.name'))
