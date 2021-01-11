@@ -115,7 +115,7 @@ spark-submit Second_step.py
 
 ![image-20210111191836877](https://cdn.jsdelivr.net/gh/ojitha/blog@master/uPic/image-20210111191836877.png)
 
-As shown in the above you have completed the step 2. The empty node is the input that is fix width file `first_file.txt` copied from the local workspace. As you see you have `csv_file.csv` as input to the last step.
+As shown in the above you have completed the step 2. The fix width file `first_file.txt` copied from the local workspace. As you see you have `csv_file.csv` as input to the last step.
 
 ## Step 3
 
