@@ -47,4 +47,4 @@ if int(anonymize_df.count()) != int(config.get('DEFAULT','number_of_records')):
 else:
     logging.info('Integrity check passed.')
 # anonymize_df.show(truncate=False)
-anonymize_df.write.option('header',True).format('csv').save('data/'+config.get('DEFAULT','anonymize_file.name'))
+anonymize_df.write.option('delimiter','|').option('header',True).format('csv').save('data/'+config.get('DEFAULT','anonymize_file.name'))

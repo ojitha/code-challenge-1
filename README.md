@@ -142,3 +142,18 @@ hdfs dfs -get data/anonymize.csv
 You can verify.
 
 IMPORTANT: Please verify integrity check is passed after the ETL process. This information is available in the log file (today.log). 
+
+## Verify
+
+You can verify the data loading to the hive table as follows:
+
+```sql
+CREATE EXTERNAL TABLE IF NOT EXISTS user_data(
+    first_name STRING, second_name STRING, address STRING, dob STRING)
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY '|'
+    STORED AS TEXTFILE
+    location 'hdfs://172.18.0.2:8020/user/maria_dev/data/anonymize.csv';
+```
+
+Now use standard SQL to query the data in the `user_data` table.
