@@ -1,6 +1,6 @@
 # Anonymize ETL
 
-This ETL flow runs in three steps, as shown in the following diagram. The complete configuration of the fix width file is given in the `config.ini` under the section `[FIXED_WIDTH_FILE]`. In addition to that `first-file.txt` with the intermediate `csv-file.csv` and the anonymize file `anonymize.csv` are defined as properties in the section `[DEFAULT]`: you can change the file names as you want via config.ini configuration file.
+This ETL flow runs in three steps, as shown in the following diagram. The complete configuration of the fix width file is given in the `config.ini` under the section `[FIXED_WIDTH_FILE]`. In addition to that `first-file.txt` with the intermediate `csv-file.csv` and the anonymize file `anonymize.csv` are defined as properties in the section `[DEFAULT]`: you can change the file names as you want via config.ini configuration file. To increase the file size, change the `number_of_records` property to higher number.
 
 
 
@@ -31,7 +31,7 @@ In my vscode workspace:
 
 As shown in the above screenshot, the data file is created (in this case `first_file.txt`) which is in fixed width. The console shows the docker-compose logs.
 
-### Testing
+### Testing edge cases
 ```bash
 python -m unittest Test_GenerateFixWidthFile.py
 ```
