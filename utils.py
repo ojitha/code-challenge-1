@@ -1,3 +1,7 @@
+'''
+    Utilities
+'''
+
 import re
 import ConfigParser
 
@@ -8,7 +12,7 @@ NAME = 'name'
 def removeStartEndChars(str):
     return str.strip()[1:-1]
 
-# file confituration from config.ini files is stored here for resuablility
+# Fix file configurations from the config.ini files is stored in this class for resuablility
 class FileConfig:
 
     def __init__(self):
