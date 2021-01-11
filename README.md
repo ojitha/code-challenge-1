@@ -1,8 +1,22 @@
-[TOC]
+# Anonymize ETL
 
-# Introduction
+This ETL flow run in three steps as shown in the following diagram. The complete configuration of the fix width file are given in the `config.ini` under the section `[FIXED_WIDTH_FILE]`. In addition to that `first-file.txt` with the intermediate `csv-file.csv` and the anonymize file `anonymize.csv` are define as properties in the section `[DEFAULT]`: you can change the file names as you want via config.ini configuration file.
 
-The complete configuration of the fix width file is given in the config.ini file. Use the docker-compose to create docker container using given Dockerfile. The docker composeer will map your current directory to the container. When the GenerateFixWidthFile.py ran, the targt text file will be created in your current directory.
+
+
+![image-20210111165856129](https://cdn.jsdelivr.net/gh/ojitha/blog@master/uPic/image-20210111165856129.png)
+
+Above diagram, the script to run in each stpes are given. You have to follow the step one after another sequence to get the final result `anonymize.csv`.
+
+
+
+### Integrity checking
+
+As shown in the `config.ini` under the `DEFAULT` section, the `number_of_records` property define the expected number of records to flow in the ETL. Both the step 1 & 2, integrity check will be done and record to the `loggin.file` (that is today.log).
+
+## Step 1
+
+Use the docker-compose to create docker container using given Dockerfile. The docker composeer will map your current directory to the container. When the GenerateFixWidthFile.py ran, the targt text file will be created in your current directory.
 
 To run in the docker container (This has been tested in the MacOS)
 
@@ -13,9 +27,9 @@ In my vscode workspace:
 
 ![image-20210111105650133](https://cdn.jsdelivr.net/gh/ojitha/blog@master/uPic/image-20210111105650133.png)
 
-As shown in the above screenshot, the data file created is first_file.txt which is in fixed width. The console shows the docker compose logs.
+As shown in the above screenshot, the data file is created (in this case `first_file.txt`) which is in fixed width. The console shows the docker compose logs.
 
-## Testing
+### Testing
 ```bash
 python -m unittest Test_GenerateFixWidthFile.py
 ```
@@ -51,3 +65,44 @@ DEBUG:root:format string: {0!a:<4s}{1!a:<8s}{2!a:<27s}{3!a:<8s}
 DEBUG:root:current row length is 63, File width is 55
 ERROR:root:Not Fit: row length 63 > File width 55
 ```
+
+You have to copy this file to the [hortonwork sandbox HDP](https://www.cloudera.com/downloads/hortonworks-sandbox.html) sandbox version 2.6. 
+
+## Step 2
+
+The script `Second_step.py` written to run in python 2.7.18 because this is the version supported by the sandbox. First, the fixed with file has to be copied to the sand box via scp . I used standard `maria_dev` account to run this script in the sandbox. 
+
+```bash
+scp -P 2222 /path/to/first_file.txt  maria_dev@localhost:
+```
+
+Copy the following files as well:
+
+- Second_step.py
+- requirments.py
+- utils.py
+
+now login to the sandbox:
+
+```bash
+ssh maria_dev@localhost -p 2222
+```
+
+first create data directory in HDFS:
+
+```bash
+hdfs dfs -mkdir data
+```
+
+Then copy the `first_file.txt` to the `data` directory:
+
+```bash
+hdfs dfs -put first_file.txt data
+```
+
+Now you are ready to run the script:
+
+```bash
+spark-submit Second_step.py
+```
+
