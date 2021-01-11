@@ -76,7 +76,7 @@ NOTE: I have used python faker package to create data.
 
 This step creates intermediate CSV file (as in the `config.ini`, the file name is `csv_file.csv`). The separator of this file is unix pipe character instead of the comma. The comma character is avoided because the fixed-length file doesn't have restrictions for commas.
 
-The script `Second_step.py` written to run in python 2.7.18.  the reason is the version supported by the sandbox. First, the fixed-width file has to be copied to the sand box via scp. I used the standard `maria_dev` account to run this script in the sandbox. 
+The script `Second_step.py` written to run in Apache Spark 2.  the reason is the version supported by the sandbox. First, the fixed-width file has to be copied to the sand box via scp. I used the standard `maria_dev` account to run this script in the sandbox. 
 
 ```bash
 scp -P 2222 /path/to/first_file.txt  maria_dev@localhost:
@@ -107,7 +107,7 @@ Then copy the `first_file.txt` to the `data` directory:
 hdfs dfs -put first_file.txt data
 ```
 
-Now you are ready to run the script:
+Now you are ready to submit the PySpark job:
 
 ```bash
 spark-submit Second_step.py
@@ -119,7 +119,7 @@ As shown in the above you have completed the step 2. The fix width file `first_f
 
 ## Step 3
 
-In this step anonymize the data of the `csv_file.csv` to `anonymize.csv`.
+In this step anonymize the data of the `csv_file.csv` to `anonymize.csv`. You have to run the Aparch Spark job.
 
 First you have to copy the Thrid_step.py to the sandbox:
 
@@ -127,7 +127,7 @@ First you have to copy the Thrid_step.py to the sandbox:
 scp -P 2222 /path/to/Third_step.py  maria_dev@localhost:
 ```
 
-Next run the script:
+Next submit PySpark job to Apache Spark:
 
 ```bash
 spark-submit Third_step.py
