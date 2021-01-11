@@ -16,7 +16,7 @@ As shown in the `config.ini` under the `DEFAULT` section, the `number_of_records
 
 ## Step 1
 
-Use the docker-compose to create a Docker container using given Dockerfile. The docker composer will map your current directory to the container. When the GenerateFixWidthFile.py ran, the target text file will be created in your current directory.
+Use the docker-compose to create a Docker container using given Dockerfile. The docker composer will map your current directory to the container. When the GenerateFixWidthFile.py ran, the target text file will be created in your current directory in the local workspace.
 
 ![image-20210111185655874](https://cdn.jsdelivr.net/gh/ojitha/blog@master/uPic/image-20210111185655874.png)
 
@@ -115,7 +115,7 @@ spark-submit Second_step.py
 
 ![image-20210111185749822](https://cdn.jsdelivr.net/gh/ojitha/blog@master/uPic/image-20210111185749822.png)
 
-As shown in the above you have completed the step 2. The empty node is the input that is fix width file: first_file.txt. As you see you have `csv_file.csv` as input to the last step.
+As shown in the above you have completed the step 2. The empty node is the input that is fix width file `first_file.txt` copied from the local workspace. As you see you have `csv_file.csv` as input to the last step.
 
 ## Step 3
 
