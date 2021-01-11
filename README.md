@@ -18,6 +18,8 @@ As shown in the `config.ini` under the `DEFAULT` section, the `number_of_records
 
 Use the docker-compose to create a Docker container using given Dockerfile. The docker composer will map your current directory to the container. When the GenerateFixWidthFile.py ran, the target text file will be created in your current directory.
 
+![image-20210111185655874](https://cdn.jsdelivr.net/gh/ojitha/blog@master/uPic/image-20210111185655874.png)
+
 To run in the docker container (This has been tested in the MacOS)
 
 ```bash
@@ -111,7 +113,9 @@ Now you are ready to run the script:
 spark-submit Second_step.py
 ```
 
+![image-20210111185749822](https://cdn.jsdelivr.net/gh/ojitha/blog@master/uPic/image-20210111185749822.png)
 
+As shown in the above you have completed the step 2. The empty node is the input that is fix width file: first_file.txt. As you see you have `csv_file.csv` as input to the last step.
 
 ## Step 3
 
