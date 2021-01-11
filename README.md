@@ -68,7 +68,11 @@ ERROR:root:Not Fit: row length 63 > File width 55
 
 You have to copy this file to the [hortonwork sandbox HDP](https://www.cloudera.com/downloads/hortonworks-sandbox.html) sandbox version 2.6. 
 
+NOTE: I have used python faker package to create data.
+
 ## Step 2
+
+This step create intermidiate csv file (as in the `config.ini`, the file name is `csv_file.csv`). The separator of this file is unix pipe character instead of comma. The comma character is avoided because fixed length file doesn't have restrictions for commas.
 
 The script `Second_step.py` written to run in python 2.7.18 because this is the version supported by the sandbox. First, the fixed with file has to be copied to the sand box via scp . I used standard `maria_dev` account to run this script in the sandbox. 
 
@@ -81,6 +85,7 @@ Copy the following files as well:
 - Second_step.py
 - requirments.py
 - utils.py
+- config.ini
 
 now login to the sandbox:
 
@@ -106,3 +111,30 @@ Now you are ready to run the script:
 spark-submit Second_step.py
 ```
 
+
+
+## Step 3
+
+In this step anonymize the data of the `csv_file.csv` to `anonymize.csv`.
+
+First you have to copy the Thrid_step.py to the sandbox:
+
+```bash
+scp -P 2222 /path/to/Third_step.py  maria_dev@localhost:
+```
+
+Next run the script:
+
+```bash
+spark-submit Third_step.py
+```
+
+You can copy the hdfs data to you local driver:
+
+```bash
+hdfs dfs -get data/anonymize.csv
+```
+
+You can verify.
+
+IMPORTANT: Please verify integrity check is passed after the ETL process. This information is availble in the log file (today.log). 
