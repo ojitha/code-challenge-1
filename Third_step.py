@@ -1,6 +1,6 @@
-```
+'''
     Third step to create anonymize csv
-```
+'''
 
 from pyspark.sql import SparkSession
 from faker import Factory
@@ -33,7 +33,7 @@ fake_address_udf = udf(fake_address, StringType())
 
 spark = SparkSession.builder.appName('Third_step').getOrCreate()
 df = spark.read.option('header',True).option('delimiter','|').option("inferSchema",True).csv("data/"+config.get('DEFAULT','csv_file.name'))
-logging.info(df.printSchema())
+#logging.info(df.printSchema())
 
 #df.show(truncate=False)
 
@@ -41,5 +41,10 @@ anonymize_df = df.withColumn(config.get('FIXED_WIDTH_FILE','first_name.name'), f
     .withColumn(config.get('FIXED_WIDTH_FILE','last_name.name'), fake_last_name_udf()) \
     .withColumn('address', fake_address_udf())
 
-#anonymize_df.show(truncate=False)
+# integrity check
+if int(anonymize_df.count()) != int(config.get('DEFAULT','number_of_records')):
+    logging.error("Integrity check failed because data frame record count is %d and expected count is %d",anonymize_df.count(), int(config.get('DEFAULT','number_of_records') ))
+else:
+    logging.info('Integrity check passed.')
+# anonymize_df.show(truncate=False)
 anonymize_df.write.option('header',True).format('csv').save('data/'+config.get('DEFAULT','anonymize_file.name'))

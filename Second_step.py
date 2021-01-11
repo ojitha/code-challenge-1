@@ -11,7 +11,6 @@ import ConfigParser
 import logging
 
 logging.basicConfig(filename='today.log',level=logging.INFO)
-logging.info("==========================================")
 
 f_config = FileConfig()
 
@@ -43,4 +42,9 @@ df_to_save = csv_df \
     .withColumn(f_config.address[NAME], cleanCol(f_config.address[NAME])) \
     .withColumn(f_config.dob[NAME], cleanCol(f_config.dob[NAME]))
 
+# integrity check
+if int(df_to_save.count()) != int(config.get('DEFAULT','number_of_records')):
+    logging.error("Integrity check failed because data frame record count is %d and expected count is %d",df_to_save.count(), int(config.get('DEFAULT','number_of_records') ))
+else:
+    logging.info('Integrity check passed.')
 df_to_save.write.option('delimiter','|').option('header',True).format('csv').save('data/'+config.get('DEFAULT','csv_file.name'))
