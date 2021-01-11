@@ -6,9 +6,7 @@ WIDTH ='width'
 NAME = 'name'
 #cleansing the pre and post \' characters
 def removeStartEndChars(str):
-    pre = re.sub("^\'","",str)
-    post = pre[:-1]
-    return post
+    return str.strip()[1:-1]
 
 # file confituration from config.ini files is stored here for resuablility
 class FileConfig:
