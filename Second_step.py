@@ -20,7 +20,7 @@ config.read('config.ini')
 # created a UDF to cleanse for example
 cleanCol = udf(lambda x: removeStartEndChars(x), StringType())
 
-spark = SparkSession.builder.appName('abc').getOrCreate()
+spark = SparkSession.builder.appName('Second_step').getOrCreate()
 
 df = spark.read.text("data/"+config.get('FIXED_WIDTH_FILE','file_name'))
 
